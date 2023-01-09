@@ -1,0 +1,7 @@
+Les packages suivants n'étant pas disponibles nativement dans python, vious devrez les installer en utilisant la commande suivante : pip install <nom du package>
+
+Packages :
+1- urlopen
+2- bs4
+3- lxml
+4- csv
