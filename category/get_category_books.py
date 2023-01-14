@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+import datetime
 
 #Récupérer la position d'une sous-chaîne dans une chaîne de caractères
 def get_substring_position(s, str, n):
@@ -60,7 +61,8 @@ def get_category_elements(url, category_all_descripteurs):
     return category_all_descripteurs
 
 #Pousser les données récupérées dans un fichier CSV
-def push_data_to_csv(list_descripteurs, path_file):
+def push_data_to_csv(list_descripteurs):
+    path_file = os.getcwd()+'\csv_file.csv'
     csv_file = open(path_file,'w+', newline='')
     writer = csv.writer(csv_file, delimiter=';')
     writer.writerow(('product_page_url', 'universal_ product_code (upc)','title','price_including_tax','price_excluding_tax','number_available','product_description','category','review_rating','image_url'))
@@ -69,8 +71,13 @@ def push_data_to_csv(list_descripteurs, path_file):
     csv_file.close()
 
 # # ================== récupérer une catégorie de livres
-path_file = os.getcwd()+'/csv_file2.csv'
+now_begin = datetime.datetime.now()
+print(str(now_begin.hour)+' h', str(now_begin.minute)+' min', str(now_begin.second)+' s')
 url ='http://books.toscrape.com/catalogue/category/books/historical-fiction_4/index.html'
 category_all_descripteurs = []
 list_descripteurs = get_category_elements(url, category_all_descripteurs)
-push_data_to_csv(list_descripteurs, path_file)
+push_data_to_csv(list_descripteurs)
+now_end = datetime.datetime.now()
+print(str(now_end.hour)+' h', str(now_end.minute)+' min', str(now_end.second)+' s')
+
+

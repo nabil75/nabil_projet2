@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+import datetime
 
 #Récupérer la position d'une sous-chaîne dans une chaîne de caractères
 def get_substring_position(s, str, n):
@@ -36,7 +37,8 @@ def get_book_elements(url):
     return descripteurs
 
 #Pousser les données récupérées dans un fichier CSV
-def push_data_to_csv(list_descripteurs, path_file):
+def push_data_to_csv(list_descripteurs):
+    path_file = os.getcwd()+'\csv_file.csv'
     csv_file = open(path_file,'w+', newline='')
     writer = csv.writer(csv_file, delimiter=';')
     writer.writerow(('product_page_url', 'universal_ product_code (upc)','title','price_including_tax','price_excluding_tax','number_available','product_description','category','review_rating','image_url'))
@@ -44,11 +46,15 @@ def push_data_to_csv(list_descripteurs, path_file):
         writer.writerow((descripteurs[0], descripteurs[1], descripteurs[2], descripteurs[3], descripteurs[4], descripteurs[5], descripteurs[6], descripteurs[7], descripteurs[8], descripteurs[9]))
     csv_file.close()
 
-
 # ================== récupérer un seul livre
+now_begin = datetime.datetime.now()
+print(str(now_begin.hour)+' h', str(now_begin.minute)+' min', str(now_begin.second)+' s')
 path_file = os.getcwd()+'/csv_file1.csv'
 url='http://books.toscrape.com/catalogue/choosing-our-religion-the-spiritual-lives-of-americas-nones_14/index.html'
 list_descripteurs=[]
 descripteurs = get_book_elements(url)
 list_descripteurs.append(descripteurs)
-push_data_to_csv(list_descripteurs, path_file)
+push_data_to_csv(list_descripteurs)
+now_end = datetime.datetime.now()
+print(str(now_end.hour)+' h', str(now_end.minute)+' min', str(now_end.second)+' s')
+

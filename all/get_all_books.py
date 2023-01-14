@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+import datetime
 
 #Récupérer la position d'une sous-chaîne dans une chaîne de caractères
 def get_substring_position(s, str, n):
@@ -60,19 +61,20 @@ def get_category_elements(url, category_all_descripteurs):
     return category_all_descripteurs
 
 #Récupérer tous les livres présentés sur le site
-def get_all_books_elements(url):
+def get_all_books_elements(url, parent_dir):
     html = urlopen(url)
     bs = BeautifulSoup(html.read(),'lxml')
     list_category = bs.select("div > ul > li > ul > li > a")
     all_descripteurs =[]
     for category in list_category:
         category_descripteurs=[]
+
         # Création d'un répertoire pour regrpuper tous les fichiers générés pour la catégorie en cours
         directory = (category.text).strip()
-        parent_dir = "C:/Users/nabil/OneDrive/Documents/openclassroom/Projet_02/ressources/all"
         path = os.path.join(parent_dir, directory)
         os.mkdir(path)
         os.chdir(path)
+
         category_url = "http://books.toscrape.com/"+category['href']
         category_descripteurs = get_category_elements(category_url, category_descripteurs)
         push_category_data_to_csv(category_descripteurs, (category.text).strip())
@@ -88,8 +90,13 @@ def push_category_data_to_csv(list_descripteurs, category):
         writer.writerow((descripteurs[0], descripteurs[1], descripteurs[2], descripteurs[3], descripteurs[4], descripteurs[5], descripteurs[6], descripteurs[7], descripteurs[8], descripteurs[9]))
     csv_file.close()
 
-# push_data_to_csv(list_descripteurs, path_file)
 
 # ================== récupérer tous les livres
+now_begin = datetime.datetime.now()
+print(str(now_begin.hour)+' h', str(now_begin.minute)+' min', str(now_begin.second)+' s')
+parent_dir = os.getcwd()
 url ='http://books.toscrape.com/'
-get_all_books_elements(url)
+get_all_books_elements(url, parent_dir)
+now_end = datetime.datetime.now()
+print(str(now_end.hour)+' h', str(now_end.minute)+' min', str(now_end.second)+' s')
+
